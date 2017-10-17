@@ -11,9 +11,9 @@ public class NetworkManager : Photon.PunBehaviour {
     public Dropdown roomList;
 	// Use this for initialization
 	void Start () {
-        PhotonNetwork.logLevel = PhotonLogLevel.Full;
+        //PhotonNetwork.logLevel = PhotonLogLevel.Full;
 
-        PhotonNetwork.autoJoinLobby = true;
+        PhotonNetwork.autoJoinLobby = false;
 
         PhotonNetwork.ConnectUsingSettings("0.1");
 	}
@@ -33,6 +33,13 @@ public class NetworkManager : Photon.PunBehaviour {
     {
         Debug.Log("サーバに接続");
         loginUI.SetActive(true);
+    }
+
+    public override void OnJoinedRoom()
+    {
+        Debug.Log("部屋に入りました");
+        loginUI.SetActive(false);
+        PhotonNetwork.Instantiate("Cube", Vector3.zero, Quaternion.identity, 0);
     }
 
     public void LoginGame()
@@ -55,11 +62,13 @@ public class NetworkManager : Photon.PunBehaviour {
                 PhotonNetwork.JoinOrCreateRoom("DefaultRoom",ro,TypedLobby.Default);
             }
         }
+        Debug.Log("ログイン");
     }
 
     public void LogoutGame()
     {
         PhotonNetwork.LeaveRoom();
+        loginUI.SetActive(true);
     }
 
     public override void OnReceivedRoomListUpdate()
@@ -83,4 +92,12 @@ public class NetworkManager : Photon.PunBehaviour {
             roomList.AddOptions(list);
         }
     }
+
+
+    // テストコード
+    public InputField messageField;
+
+    private List<string> messageLog = new List<string>();
+
+
 }
