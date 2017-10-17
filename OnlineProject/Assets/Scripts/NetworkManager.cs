@@ -61,4 +61,26 @@ public class NetworkManager : Photon.PunBehaviour {
     {
         PhotonNetwork.LeaveRoom();
     }
+
+    public override void OnReceivedRoomListUpdate()
+    {
+        Debug.Log("部屋更新");
+
+        RoomInfo[] rooms = PhotonNetwork.GetRoomList();
+
+        List<string> list = new List<string>();
+        foreach(RoomInfo room in rooms)
+        {
+            if(room.PlayerCount < room.MaxPlayers)
+            {
+                list.Add(room.Name);
+            }
+        }
+        roomList.ClearOptions();
+
+        if(list.Count != 0)
+        {
+            roomList.AddOptions(list);
+        }
+    }
 }
