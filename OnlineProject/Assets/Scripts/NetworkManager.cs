@@ -92,12 +92,4 @@ public class NetworkManager : Photon.PunBehaviour {
             roomList.AddOptions(list);
         }
     }
-
-
-    // テストコード
-    public InputField messageField;
-
-    private List<string> messageLog = new List<string>();
-
-
 }
