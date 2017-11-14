@@ -31,13 +31,23 @@ public class Player : Actor {
 
     public override void Movement(float x, float z, float speed)
     {
+        // カメラの方向を前にする
+        if (x != 0 || z != 0)
+        {
+            Vector3 cameraDir = transform.position - _mainCamera.transform.position;
+            float angle = Mathf.Atan2(cameraDir.z, cameraDir.x) + Mathf.Atan2(-x, z);
+            x = Mathf.Cos(angle);
+            z = Mathf.Sin(angle);
+        }
         Vector3 vel = new Vector3(x, 0, z).normalized * _speed * Time.deltaTime;
         bool isRun = Vector3.Distance(Vector3.zero, vel) >= 0.01f;
         _myAnimator.SetBool("Run", isRun);
+        if (!isRun) return;
         base.Movement(x, z, speed);
     }
 
     Vector3 _mouseDownPos;
+    Vector3 _angleAmount;
     void CameraUpdate()
     {
         if(Input.GetMouseButtonDown(1))
@@ -46,13 +56,14 @@ public class Player : Actor {
         }
         else if(Input.GetMouseButton(1))
         {
-            Vector2 dir = Input.mousePosition - _mouseDownPos;
+            Vector3 dir = Input.mousePosition - _mouseDownPos;
             _mouseDownPos = Input.mousePosition;
-            _mainCamera.transform.Rotate(new Vector3(0, dir.x, 0));
+            _angleAmount -= dir;
+            _angleAmount.y = Mathf.Clamp(_angleAmount.y, 0.0f, 90.0f);
         }
         _mainCamera.transform.position = transform.position;
-        _mainCamera.transform.Translate(Vector3.back * 10);
-        _mainCamera.transform.LookAt(transform.position + new Vector3(0, 1, 0));
+        _mainCamera.transform.rotation = Quaternion.Euler(_angleAmount.y, _angleAmount.x, 0);
+        _mainCamera.transform.Translate(Vector3.back * 5);
         _mainCamera.transform.position += new Vector3(0, 2, 0);
     }
 }

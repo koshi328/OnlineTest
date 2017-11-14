@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class Cursor : MonoBehaviour {
     Actor _target;
@@ -25,6 +25,7 @@ public class Cursor : MonoBehaviour {
     {
         if (Input.GetMouseButtonDown(0))
         {
+            if (EventSystem.current.IsPointerOverGameObject()) return;
             Ray ray = new Ray();
             RaycastHit hit = new RaycastHit();
             ray = Camera.main.ScreenPointToRay(Input.mousePosition);
