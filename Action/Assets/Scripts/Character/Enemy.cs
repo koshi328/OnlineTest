@@ -8,14 +8,12 @@ public class Enemy : Actor {
     [SerializeField]
     float _speed;
 
-    Animator _myAnimator;
-    Camera _mainCamera;
-
     // Use this for initialization
     void Start()
     {
-        _myAnimator = GetComponent<Animator>();
-        _mainCamera = Camera.main;
+        _name = "enemy";
+        _maxHP = 100;
+        _currentHP = _maxHP;
     }
 
     // Update is called once per frame
